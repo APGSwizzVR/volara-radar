@@ -1,1 +1,23 @@
-{"name":"volara-radar","private":true,"version":"1.0.0","scripts":{"dev":"concurrently \"npm --prefix server run dev\" \"npm --prefix client run dev\"","build":"npm --prefix server run build && npm --prefix client run build","start":"npm --prefix server run start"},"devDependencies":{"concurrently":"^9.2.1"}}
+{
+  "name": "volara-radar",
+  "private": true,
+  "version": "2.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "maplibre-gl": "4.7.1",
+    "react": "19.1.1",
+    "react-dom": "19.1.1"
+  },
+  "devDependencies": {
+    "@types/react": "19.1.10",
+    "@types/react-dom": "19.1.7",
+    "@vitejs/plugin-react": "5.0.2",
+    "typescript": "5.9.2",
+    "vite": "7.1.3"
+  }
+}
