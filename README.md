@@ -1,73 +1,43 @@
 # Volara Radar
 
-A FlightRadar24-inspired VATSIM live radar frontend designed to deploy directly to GitHub Pages.
+Volara Radar is the live traffic/radar frontend for the Volara flight operations network.
 
-## Important architecture note
+## Interface
+- Live VATSIM traffic ingestion.
+- Smooth MapLibre aircraft tracking.
+- Callsign, route and CID search.
+- Aircraft type filters.
+- Interactive selected-flight drawer.
+- Live network statistics.
+- Simulator-focused visual dashboard.
+- Cross-platform client/download area.
+- Responsive layouts.
 
-GitHub Pages is static hosting. It cannot run a Node/Fastify server, a persistent WebSocket server, SimConnect, xPilot/vPilot bridges, or private API keys.
+## Platform target
+The Volara client architecture targets Windows x64, Windows ARM64, Linux x64 and macOS Universal (Apple Silicon + Intel).
 
-This version therefore uses the public VATSIM Data API directly from the browser. The VATSIM feed itself is regenerated about every 15 seconds, while the UI interpolates aircraft positions continuously with `requestAnimationFrame` so aircraft move smoothly between feed snapshots instead of visually jumping every update.
+The public radar frontend does not directly access local simulator APIs. Local MSFS and X-Plane integrations should use a Volara client/bridge and send required telemetry to the network service.
 
-VATSIM's current public documentation identifies VATSIM as a simulation network and its current pilot clients include vPilot for Microsoft Flight Simulator 2020/2024 and xPilot for X-Plane 11/12. citehttps://vatsim.net/docs/policy/approved-software/
+## Simulator targets
+- Microsoft Flight Simulator 2020
+- Microsoft Flight Simulator 2024
+- X-Plane 11
+- X-Plane 12
+- Other approved simulator bridges
 
-## GitHub Pages
-
-1. Push this repository to GitHub.
-2. Open **Settings → Pages**.
-3. Under **Build and deployment**, choose **GitHub Actions**.
-4. Push to `main` or run the workflow manually.
-5. GitHub will publish the `dist` folder.
-
-For this repository the expected URL is:
-
-`https://apgswizzvr.github.io/volara-radar/`
-
-## Local development
-
-```powershell
+## Development
 npm install
 npm run dev
-```
-
-Then open the Vite URL shown in PowerShell.
-
-## Production build
-
-```powershell
-npm install
 npm run build
 npm run preview
-```
-
-## Why the old grey screen happened
-
-The previous project constructed MapLibre in a way that triggered a `canvasContextAttributes` runtime exception. It also had separate client/server dependency installation, which is why `vite` and `tsx` were initially missing. This project is a single Vite frontend and removes the server dependency from the GitHub Pages build.
 
 ## Live data
+The current public frontend reads the VATSIM v3 feed:
+https://data.vatsim.net/v3/vatsim-data.json
 
-The application uses the VATSIM v3 live data feed and does not invent aircraft. Aircraft are removed when they disappear from the feed, and the footer shows the age of the latest feed snapshot.
+The feed is polled every 15 seconds. The UI renders aircraft between feed snapshots rather than inventing aircraft.
 
-The feed is a snapshot API rather than a browser WebSocket. No GitHub Pages site can turn that source into a true server-pushed stream by itself. The animation layer makes the map visually continuous between snapshots without falsely claiming that VATSIM supplies sub-second position updates.
+## Media
+Microsoft Flight Simulator media in the interface is sourced from Microsoft's official screenshot/media material. X-Plane imagery is simulator-context artwork and should be replaced with Volara-owned screenshots when the project has its own media library.
 
-## IVAO and local simulator tracking
-
-IVAO and offline MSFS 2020/2024, X-Plane 11/12 tracking cannot be implemented solely inside GitHub Pages. Local simulators require a local bridge, and a multi-network product requires a backend relay. The UI includes the source structure for this expansion without pretending those sources are live when they are not connected.
-
-A future relay can expose a WebSocket/SSE endpoint for:
-
-- IVAO
-- vPilot / MSFS 2020
-- vPilot / MSFS 2024
-- xPilot / X-Plane 11
-- xPilot / X-Plane 12
-- other approved simulator bridges
-
-The frontend should then subscribe to that relay while retaining the same rendering layer.
-
-## Weather and photographs
-
-Do not place private weather/photo API keys in this GitHub Pages repository. A browser-visible key is public. Weather and aircraft-photo providers should be proxied through a backend when authentication is required. The current UI intentionally shows an unconfigured photo state instead of scraping or redistributing copyrighted images.
-
-## VATSIM attribution
-
-Volara Radar is an independent project and is not an official VATSIM product. VATSIM data is simulated network data and should not be presented as real-world aircraft tracking.
+Volara Radar is an independent project and is not an official VATSIM product.
